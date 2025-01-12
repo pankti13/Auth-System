@@ -20,7 +20,6 @@ const login = async (req, res) => {
         if (!user) {
             return res.status(400).json({ error: "Invalid credentials" });
         }
-
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(400).json({ error: "Invalid credentials" });
@@ -57,23 +56,26 @@ const deleteUser = async (req, res) => {
 
 const getUserProfile = async (req, res) => {
     try {
-        let userId;
+        let userId = req.user.id;
+
+        // If the logged-in user is an admin, they can get any user's profile.
         if (req.user.role === "admin" && req.query.userId) {
             userId = req.query.userId;
-        } else {
-            userId = req.user.id;
-        }
-        // If the logged-in user is an admin, they can get any user's profile.
-        if (req.user.role === "admin") {
             const user = await User.findById(userId);
             return res.status(200).json(user);
         }
         // If the logged-in user is a regular user, they can only access their own profile
-        const user = await User.findById(userId).select("-password");
-        if (!user) {
-            return res.status(404).json({ error: "User not found" });
+        else if (req.user.role === "user") {
+            const user = await User.findById(userId).select("-password");
+            if (!user) {
+                return res.status(404).json({ error: "User not found" });
+            }
+            res.status(200).json(user);
         }
-        res.status(200).json(user);
+        else {
+            return res.status(400).json({ error: "User ID is required" });
+        }
+        
     } catch (error) {
         res.status(500).json({ error: "Failed to fetch user profile" });
     }
