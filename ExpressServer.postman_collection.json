@@ -1,0 +1,256 @@
+{
+	"info": {
+		"_postman_id": "7de6eddf-cdf9-40d3-a6bf-e4f899537f53",
+		"name": "ExpressServer",
+		"description": "This collection contains a set of HTTP requests for the **Secure User Authentication and Authorization System**. It includes endpoints for user registration, login, password reset, and role-based access control, along with protected routes for user and admin functionalities. Each request is configured with the necessary headers, parameters, and body data to facilitate testing and integration.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40947288"
+	},
+	"item": [
+		{
+			"name": "RegisterUser",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"user1@gmail.com\",\n    \"password\": \"123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/users/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateUserDetails",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ODM4MzQ3NjUwYzdjNzU4NzVjYjdjYyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTczNjY3OTQ2MywiZXhwIjoxNzM2NjgzMDYzfQ.ooc1lfHRNIUOzOcPc1BX5AsC976rF6xomsOQLoaMicQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"admin@gmail.com\",\n    \"password\": \"1234\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/users/user-dashboard",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"user-dashboard"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetUserDetails",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ODNhN2RhY2JhYjI1MjdjZWVjYzYyZCIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM2Njg1MDA0LCJleHAiOjE3MzY2ODg2MDR9.0_sACBfoe6V3SIi2AY6SjFPGxcE1Puk-aQbpRO8wyEs",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"user1@gmail.com\",\n    \"password\": \"123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/users/user-dashboard",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"user-dashboard"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UserDeletion by Admin",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ODM4MzQ3NjUwYzdjNzU4NzVjYjdjYyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTczNjY4MTI2NiwiZXhwIjoxNzM2Njg0ODY2fQ.LerJuqi-49WNEB0Onh54fX0VZ_b4wE01I6y0NEJ4Gms",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"admin@gmail.com\",\n    \"password\": \"12345\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/users/admin-dashboard?userId=6783a708cbab2527ceecc621",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"admin-dashboard"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "6783a708cbab2527ceecc621"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Showing error on XSS attack",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ODNkODc0MTkwNmY3Mzk1MDFlZjcwNiIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM2NjkzODkyLCJleHAiOjE3MzY2OTc0OTJ9.Sff7g1tC0xEghNRtGEGCX6Ag_sTax0EZ704tOs_ECyY",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"<script>alert('XSS')</script>@gmail.com\",\n  \"password\": \"password123\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/users/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Password Reset",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ODNlNWVlZWI5Y2RhZWRkZGU1N2UyMyIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM2Njk3MzU3LCJleHAiOjE3MzY3MDA5NTd9.U3nSBzkbZ2GMove8wHP4Mpv0LZEd6rCi4WckLcKWsj0",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"panktisalvi1305@gmail.com\",\n    \"password\": \"123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/users/forgot-password",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"forgot-password"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
