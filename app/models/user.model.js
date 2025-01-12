@@ -17,6 +17,12 @@ const UserSchema = new mongoose.Schema({
         enum: ["user", "admin"],
         default: "user",
     },
+    resetPasswordToken: {
+        type : String,
+    },
+    resetPasswordExpires: {
+        type : Date,
+    },
 });
 
 // Hash password using bcrypt

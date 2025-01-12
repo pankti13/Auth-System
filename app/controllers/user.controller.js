@@ -1,6 +1,8 @@
 const User = require("../models/user.model");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const crypto = require('crypto');
+const nodemailer = require("nodemailer");
 
 const register = async (req, res) => {
     try {
@@ -117,4 +119,63 @@ const updateUserProfile = async (req, res) => {
     }
 };
 
-module.exports = { register, login, deleteUser, getUserProfile, updateUserProfile };
+// Implement "Forgot Password" feature
+const transporter = nodemailer.createTransport({
+    service: "Gmail",
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    }
+});
+
+const forgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+        // Generate reset token
+        const resetToken = crypto.randomBytes(32).toString("hex");
+        user.resetPasswordToken = resetToken;
+        user.resetPasswordExpires = Date.now() + 3600000;
+        await user.save();
+
+        // Send reset email
+        const resetUrl = `http://localhost:5000/api/users/reset-password/${resetToken}`;
+        await transporter.sendMail({
+            to: user.email,
+            subject: "Password Reset Request",
+            text: `You requested a password reset. Please use the following link: ${resetUrl}`,
+        });
+        res.status(200).json({ message: "Password reset email sent" });
+    } catch (error) {
+        console.error("Error details:", error);
+        res.status(500).json({ error: "Error sending password reset email" });
+    }
+};
+
+const resetPassword = async (req, res) => {
+    try {
+        const { token } = req.params;
+        const { password } = req.body;
+
+        const user = await User.findOne({
+            resetPasswordToken: token,
+            resetPasswordExpires: { $gt: Date.now() }
+        });
+        if (!user) {
+            return res.status(400).json({ error: "Invalid or expired token" });
+        }
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(password, salt);
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpires = undefined;
+        await user.save();
+        res.status(200).json({ message: "Password has been reset" });
+    } catch (error) {
+        res.status(500).json({ error: "Failed to reset password" });
+    }
+};
+
+module.exports = { register, login, deleteUser, getUserProfile, updateUserProfile, forgotPassword, resetPassword };
