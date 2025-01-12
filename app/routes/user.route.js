@@ -4,9 +4,13 @@ const router = express.Router();
 const { register, login, deleteUser, getUserProfile, updateUserProfile} = require("../controllers/user.controller");
 const { forgotPassword, resetPassword } = require("../controllers/user.controller");
 const { verifyToken, checkRole } = require("../middlewares/authorizeJwt");
+const logUserActivity = require("../middlewares/logUserActivity");
 
 router.post("/register", register);
 router.post("/login", login);
+
+router.use(verifyToken);
+router.use(logUserActivity); 
 
 // Protected routes (JWT and role-based authorization)
 router.delete("/admin-dashboard", verifyToken, checkRole(["admin"]), deleteUser);
