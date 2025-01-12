@@ -1,5 +1,6 @@
 require("dotenv").config();
 const cookieParser = require("cookie-parser");
+const helmet = require("helmet");
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -11,8 +12,25 @@ const logUserActivity = require("./app/middlewares/logUserActivity");
 
 const testJson = require("./test.json");
 
+app.use(helmet());
 app.use(express.json());
 app.use(cookieParser()); 
+
+// Content Security Policy
+app.use(
+    helmet.contentSecurityPolicy({
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'"],
+        styleSrc: ["'self'", "https://trusted-cdn.com"],
+        objectSrc: ["'none'"],
+        imgSrc: ["'self'", "https://trusted-cdn.com"],
+        upgradeInsecureRequests: [],
+      },
+    })
+  );
+  
+app.use(helmet.xssFilter());
 
 app.get("/", (req, res) => {
     res.send("Hii");
